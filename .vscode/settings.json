@@ -66,5 +66,8 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
     },
-    "dotnet.defaultSolution": "shader-template.sln"
+    "dotnet.defaultSolution": "shader-template.sln",
+    "cSpell.words": [
+        "Kenney"
+    ]
 }
