@@ -68,6 +68,7 @@
     },
     "dotnet.defaultSolution": "spyro-inspired-portal.slnx",
     "cSpell.words": [
+        "AABB",
         "bitangent",
         "CBUFFER",
         "ENDHLSL",
