@@ -60,14 +60,22 @@
         "*.asset": "yaml",
         "*.meta": "yaml",
         "*.prefab": "yaml",
-        "*.unity": "yaml",
+        "*.unity": "yaml"
     },
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
-        "*.sln": "*.csproj",
+        "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "shader-template.sln",
+    "dotnet.defaultSolution": "shader-template.slnx",
     "cSpell.words": [
-        "Kenney"
+        "bitangent",
+        "CBUFFER",
+        "ENDHLSL",
+        "hlsl",
+        "HLSLPROGRAM",
+        "Holmer",
+        "Kenney",
+        "lerp",
+        "Varyings"
     ]
 }
