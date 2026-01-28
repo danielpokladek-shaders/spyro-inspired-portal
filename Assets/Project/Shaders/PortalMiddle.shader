@@ -118,9 +118,6 @@ Shader "DP/PortalMiddle"
 
                 float2 portalBackgroundUV = screenSpaceUV + combinedDistortion;
                 half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, portalBackgroundUV);
-                // return color;
-
-                // return float4(depthDifference, depthDifference, depthDifference, 1.0) * _OutlineColor;
 
                 return float4(lerp(color.xyz, coloredDepth, depthDifference), 1.0);
             }
