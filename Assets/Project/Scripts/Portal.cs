@@ -20,6 +20,7 @@ public class Portal : MonoBehaviour
     private Camera _mainCamera;
 
     private float _faceInitialYRotation;
+    private bool _isFlipped;
 
     private void Awake()
     {
@@ -47,6 +48,11 @@ public class Portal : MonoBehaviour
         float dot = Vector3.Dot(transform.forward, toCamera);
 
         bool isFlipped = dot > 0f;
+
+        if (isFlipped == _isFlipped)
+            return;
+
+        _isFlipped = isFlipped;
 
         Vector3 newRotation = new(
             0,
