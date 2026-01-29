@@ -2,6 +2,8 @@
 
 My attempt at re-creating the portals from Spyro: Reignited Trilogy.
 
+https://github.com/user-attachments/assets/f8bcdb75-ba66-40ef-b83a-85c552825871
+
 See this [blog post](https://www.danielpokladek.me/posts/shaders/2026/spyro-inspired-portal/), for a more in-depth breakdown of this shader.
 
 [Playable Demo](https://danielpokladek-shaders.github.io/spyro-inspired-portal/)
