@@ -1,28 +1,28 @@
-Shader "DP/PortalMiddle"
+Shader "DP/PortalInner"
 {
     Properties
     {
         [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
 
         _DistortMap("Distortion Texture", 2D) = "white" {}
-        _DistortSpeed("Distortion Scroll Speed", float) = 2
         _DistortStrength("Distortion Strength", float) = 2
-        
-        [HDR] _OutlineColor("Outline Color (RGB)", Color) = (0, 1, 0, 1)
-        _OutlineStrength("Outline Strength", float) = 8
-        _OutlineThresholdMax("Outline Threshold Max", float) = 1
+        _DistortAnimationVector("Animation Direction", vector, 2) = (0, 1, 0, 0)
+        _DistortAnimationSpeed("Animation Speed", float) = 2
 
-        _FadeDistance("Fade Distance", float) = 20
+        [HDR] _OutlineColor("Outline Color (RGB)", Color) = (0, 1, 0, 1)
+        _OutlineDepthScale("Outline Depth Scaler", float) = 10
     }
 
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags {
+            "RenderType" = "Opaque"
+            "RenderPipeline" = "UniversalPipeline"
+        }
 
         Pass
         {
             HLSLPROGRAM
-
             #pragma vertex vert
             #pragma fragment frag
 
@@ -34,18 +34,18 @@ Shader "DP/PortalMiddle"
                 float4 positionOS : POSITION;
                 
                 float2 uv : TEXCOORD0;
-                float2 uvDistort : TEXCOORD1;
+                float2 uvDistort : TEXCOORD2;
             };
 
             struct Varyings
             {
                 float4 positionHCS : SV_POSITION;
                 float3 positionVS : TEXCOORD3;
-
-                float2 uv : TEXCOORD0;
                 
-                float4 uvDistort : TEXCOORD1;
-                float4 screenPos : TEXCOORD2;
+                float2 uv : TEXCOORD0;
+                float2 uvDistort : TEXCOORD2;
+
+                float4 screenPos : TEXCOORD1;
             };
 
             TEXTURE2D(_BaseMap);
@@ -54,13 +54,14 @@ Shader "DP/PortalMiddle"
             TEXTURE2D(_DistortMap);
             SAMPLER(sampler_DistortMap);
 
-            float _DistortSpeed;
             float _DistortStrength;
+            float _DistortAnimationSpeed;
+            float4 _DistortAnimationVector;
 
-            float _OutlineStrength;
+            float _OutlineDepthScale;
+            float4 _OutlineColor;
             
             CBUFFER_START(UnityPerMaterial)
-                float4 _OutlineColor;
                 float4 _BaseMap_ST;
                 float4 _DistortMap_ST;
             CBUFFER_END
@@ -69,55 +70,68 @@ Shader "DP/PortalMiddle"
             {
                 Varyings OUT;
                 
-                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                OUT.positionHCS = TransformObjectToHClip(
+                    IN.positionOS.xyz
+                );
+                    
+                float3 positionWS = TransformObjectToWorld(
+                    IN.positionOS.xyz
+                );
 
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.positionVS = TransformWorldToView(positionWS);
+                OUT.positionVS = TransformWorldToView(
+                    positionWS
+                );
+                
+                OUT.uv = TRANSFORM_TEX(
+                    IN.uv,
+                    _BaseMap
+                );
 
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
-                OUT.uvDistort = float4(0,0,0,0);
-                OUT.uvDistort.xy = TRANSFORM_TEX(IN.uvDistort, _DistortMap);
-                OUT.uvDistort.zw = OUT.uvDistort.xy;
+                float2 uvDistort = TRANSFORM_TEX(
+                    IN.uvDistort,
+                    _DistortMap
+                );
 
-                OUT.uvDistort.y -= _DistortSpeed * _Time.x;
-                OUT.uvDistort.z += _DistortSpeed * _Time.x;
+                float2 distortOffset = _DistortAnimationVector.xy;
+                distortOffset *= _Time.x * _DistortAnimationSpeed;
+
+                OUT.uvDistort = uvDistort - distortOffset;
 
                 OUT.screenPos = ComputeScreenPos(OUT.positionHCS);
 
                 return OUT;
             }
 
-            float LinearDepthToNonLinear(float linear01Depth, float4 zBufferParam){
-                // Inverse of Linear01Depth
-                return (1.0 - (linear01Depth * zBufferParam.y)) / (linear01Depth * zBufferParam.x);
-            }
-
-            float EyeDepthToNonLinear(float eyeDepth, float4 zBufferParam){
-                // Inverse of LinearEyeDepth
-                return (1.0 - (eyeDepth * zBufferParam.w)) / (eyeDepth * zBufferParam.z);
-            }
-
             half4 frag(Varyings IN) : SV_Target
             {
-                float2 distortTexture = SAMPLE_TEXTURE2D(_DistortMap, sampler_DistortMap, IN.uvDistort.xy);
-                distortTexture  *= _DistortStrength / 100;
-                
-                float2 distortTexture2 = SAMPLE_TEXTURE2D(_DistortMap, sampler_DistortMap, IN.uvDistort.zw);
-                distortTexture2 *= _DistortStrength / 100;
-
-                float combinedDistortion = distortTexture + distortTexture2;
+                float distortTexture = SAMPLE_TEXTURE2D(
+                    _DistortMap,
+                    sampler_DistortMap,
+                    IN.uvDistort
+                );
+                distortTexture *= _DistortStrength;
 
                 float2 screenSpaceUV = IN.screenPos.xy / IN.screenPos.w;
 
-                float fragmentEyeDepth = -IN.positionVS.z;
+                float2 backgroundUV = screenSpaceUV;
+                backgroundUV += distortTexture;
+
+                half4 color = SAMPLE_TEXTURE2D(
+                    _BaseMap,
+                    sampler_BaseMap,
+                    backgroundUV
+                );
+
                 float rawDepth = SampleSceneDepth(screenSpaceUV);
                 float sceneEyeDepth = LinearEyeDepth(rawDepth, _ZBufferParams);
-                float depthDifference = 1 - saturate((sceneEyeDepth - fragmentEyeDepth) * _OutlineStrength);
 
+                float fragmentEyeDepth = -IN.positionVS.z;
+                float depthDifference = saturate(
+                    (sceneEyeDepth - fragmentEyeDepth) * _OutlineDepthScale
+                );
+                depthDifference = 1 - depthDifference;
+                
                 float3 coloredDepth = depthDifference * _OutlineColor;
-
-                float2 portalBackgroundUV = screenSpaceUV + combinedDistortion;
-                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, portalBackgroundUV);
 
                 return float4(lerp(color.xyz, coloredDepth, depthDifference), 1.0);
             }

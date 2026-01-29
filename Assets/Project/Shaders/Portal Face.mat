@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Portal Face
-  m_Shader: {fileID: 4800000, guid: 19bdf0d3f4f34b293a8c744c557635ea, type: 3}
+  m_Shader: {fileID: 4800000, guid: 882967a1aadc1e631b50c22c53031b87, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -20,7 +20,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _DistortAnimationVector
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -114,7 +114,9 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _OutlineDepthScale: 10
     - _OutlineStrength: 11
+    - _OutlineThreshold: 10
     - _OutlineThresholdMax: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
