@@ -17,10 +17,11 @@ This shader uses a secondary camera, which render to render texture, in combinat
 - Unity: **6000.3.5f2**
 - Render Pipeline: **Universal Render Pipeline (URP)**
 
-License
+## License
 
-Licensed under MIT unless otherwise specified - see LICENSE for more information.
-Acknowledgements
+Licensed under MIT unless otherwise specified - see [LICENSE](./LICENSE) for more information.
+
+## Acknowledgements
 
 Kenney Prototype Textures - https://www.kenney.nl/assets/prototype-textures
 
