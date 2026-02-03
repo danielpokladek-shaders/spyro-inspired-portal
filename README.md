@@ -6,8 +6,6 @@ https://github.com/user-attachments/assets/f8bcdb75-ba66-40ef-b83a-85c552825871
 
 See this [blog post](https://www.danielpokladek.me/posts/shaders/2026/spyro-inspired-portal/), for a more in-depth breakdown of this shader.
 
-[Playable Demo](https://danielpokladek-shaders.github.io/spyro-inspired-portal/)
-
 ## Overview
 
 This shader uses a secondary camera, which render to render texture, in combination with view space vertex positions to achieve the background look. UVs of the background are then further distorted using a simple scrolling noise pattern, and glow outline is achieved using depth texture, HDR color, and Unity's URP bloom.
