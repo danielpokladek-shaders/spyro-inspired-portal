@@ -1,40 +1,32 @@
-# Template Project (Unity)
+# Spyro Inspired Portal
 
-Simple Unity project template for experimenting (URP-ready).
+My attempt at re-creating the portals from Spyro: Reignited Trilogy.
 
-Template comes with:
+https://github.com/user-attachments/assets/f8bcdb75-ba66-40ef-b83a-85c552825871
 
-- Simple first person controller.
-- Scene with a room and colliders set up.
-- Prototyping materials/textures.
+See this [blog post](https://www.danielpokladek.me/posts/shaders/2026/spyro-inspired-portal/), for a more in-depth breakdown of this shader.
 
-## Requirements
+[Playable Demo](https://danielpokladek-shaders.github.io/spyro-inspired-portal/)
 
-- Unity (see `ProjectSettings/ProjectVersion.txt` for the exact editor version used by this project)
+## Overview
 
-## Getting started
+This shader uses a secondary camera, which render to render texture, in combination with view space vertex positions to achieve the background look. UVs of the background are then further distorted using a simple scrolling noise pattern, and glow outline is achieved using depth texture, HDR color, and Unity's URP bloom.
 
-1. Open Unity Hub
-2. Add this folder as a project
-3. Open the project in the matching Unity version
+## Specs
 
-## Where to look
-
-- `Assets/Project/` — project-specific content (scenes, materials, shaders, scripts)
-- `Assets/Shared/` — shared/reusable assets
-- `Packages/manifest.json` — package dependencies (URP, Shader Graph, etc.)
-- `ProjectSettings/` — Unity project settings
-
-## Notes
-
-- If you’re on URP: check `ProjectSettings/GraphicsSettings.asset` and `ProjectSettings/QualitySettings.asset` to confirm the active render pipeline asset.
-- Unity’s `Library/` folder is generated locally and should not be edited manually.
+- Unity: **6000.3.5f2**
+- Render Pipeline: **Universal Render Pipeline (URP)**
 
 ## License
 
-See `LICENSE` for more information.
+Licensed under MIT unless otherwise specified - see [LICENSE](./LICENSE) for more information.
 
 ## Acknowledgements
 
-Kenney Prototype Textures -
-https://www.kenney.nl/assets/prototype-textures
+Kenney Prototype Textures - https://www.kenney.nl/assets/prototype-textures
+
+Depth by Cyanilux - https://www.cyanilux.com/tutorials/depth/
+
+Portals Video by Sebastian Lague - https://www.youtube.com/watch?v=cWpFZbjtSQg
+
+Portal Model by losdayver - https://sketchfab.com/3d-models/ancient-portal-frame-934bbd85eb4041128a1fa4cde8ac0ea9
